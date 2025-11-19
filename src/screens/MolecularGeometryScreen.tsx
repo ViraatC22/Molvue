@@ -401,7 +401,7 @@ const Geometry3DView = ({ geometryName, centralAtom, neighborAtoms, elementColor
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#f5f5f7');
+    scene.background = new THREE.Color('#ffffff');
     const camera = new THREE.PerspectiveCamera(70, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 100);
     camera.position.z = 4;
 
@@ -519,15 +519,16 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 8,
     padding: 10,
     fontSize: 16,
     backgroundColor: '#fafafa',
+    color: '#333',
   },
   button: {
-    backgroundColor: '#FBBC05',
+    backgroundColor: '#34A853',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
   },
@@ -540,7 +541,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 15,
     backgroundColor: '#f8f8f8',
-    borderRadius: 5,
+    borderRadius: 10,
   },
   resultRow: {
     marginBottom: 10,
@@ -557,15 +558,17 @@ const styles = StyleSheet.create({
   },
   resultDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#333',
     lineHeight: 20,
   },
   geometryVisualization: {
     marginTop: 20,
     padding: 15,
     backgroundColor: '#f8f8f8',
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   visualizationTitle: {
     fontSize: 16,
@@ -582,14 +585,15 @@ const styles = StyleSheet.create({
   },
   visualizationDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#333',
     textAlign: 'center',
   },
   tableContainer: {
     marginTop: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
   },
   tableHeader: {
     flexDirection: 'row',
@@ -599,11 +603,13 @@ const styles = StyleSheet.create({
   },
   tableHeaderCell: {
     fontWeight: 'bold',
+    color: '#333',
   },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    backgroundColor: '#fff',
   },
   tableCell: {
     flex: 1,

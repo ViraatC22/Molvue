@@ -430,7 +430,7 @@ const ThreeJSWebView = ({ geometryName, centralAtom, neighborAtoms, elementColor
     rendererRef.current = renderer;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#f5f5f7');
+    scene.background = new THREE.Color('#ffffff');
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 100);
@@ -553,22 +553,23 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 8,
     padding: 10,
     fontSize: 16,
     backgroundColor: '#fafafa',
+    color: '#333',
   },
   infoContainer: {
     flexDirection: 'row',
     marginBottom: 8,
     paddingVertical: 4,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#e0e0e0',
   },
   infoLabel: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#444',
+    color: '#666',
     width: 120,
   },
   infoValue: {
@@ -577,9 +578,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: '#FBBC05',
+    backgroundColor: '#34A853',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
   },
@@ -592,7 +593,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: '#f8f8f8',
-    borderRadius: 5,
+    borderRadius: 10,
   },
   resultRow: {
     flexDirection: 'row',
@@ -615,8 +616,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 15,
     backgroundColor: '#f8f8f8',
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   visualizationTitle: {
     fontSize: 16,
@@ -626,7 +629,7 @@ const styles = StyleSheet.create({
   },
   visualizationDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#333',
     textAlign: 'center',
   },
   webCanvasContainer: {
@@ -634,7 +637,7 @@ const styles = StyleSheet.create({
     height: 360,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#f5f5f7',
+    backgroundColor: '#fff',
   },
 });
 

@@ -1,31 +1,23 @@
-# Node/Expo/React Native
 node_modules/
-.expo/
-.expo-shared/
-.vscode/
-web-build/
 dist/
 build/
-coverage/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-expo-debug.log*
-
-# OS files
 .DS_Store
-Thumbs.db
+*.log
 
-# Env files
-.env
-.env.local
-.env.*.local
+# Expo/React Native
+android/
+ios/
 
-# TypeScript build cache
-*.tsbuildinfo
+# Next.js app
+apps/web/.next/
+apps/web/node_modules/
+apps/web/.env*
 
-# Metro/Cache
-.metro-cache/
+# Server app
+apps/server/node_modules/
+apps/server/.env*
+
+# Cache
 .cache/
+**/.cache/
+.expo/
