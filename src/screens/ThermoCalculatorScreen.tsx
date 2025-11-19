@@ -389,7 +389,6 @@ export default function ThermoCalculatorScreen() {
         </View>
         <View style={styles.gaugeLabelsRow}>
           <Text style={styles.gaugeLabel}>Exothermic 🔥</Text>
-          <Text style={styles.gaugeLabel}>0</Text>
           <Text style={styles.gaugeLabel}>Endothermic ❄️</Text>
         </View>
         <Text style={styles.gaugeValueText}>{deltaH.toFixed(2)} kJ/mol • {level} magnitude</Text>
@@ -424,7 +423,6 @@ export default function ThermoCalculatorScreen() {
         </View>
         <View style={styles.gaugeLabelsRow}>
           <Text style={styles.gaugeLabel}>Order</Text>
-          <Text style={styles.gaugeLabel}>0</Text>
           <Text style={styles.gaugeLabel}>Disorder</Text>
         </View>
         <Text style={styles.gaugeValueText}>{deltaS.toFixed(2)} J/mol·K • {disorder ? 'More microstates' : 'Fewer microstates'}</Text>
@@ -614,33 +612,7 @@ export default function ThermoCalculatorScreen() {
     );
   };
 
-  const PhaseEnthalpyDiagram = () => {
-    const fus = 6;
-    const vap = 41;
-    const max = Math.max(fus, vap);
-    const fusPct = (fus / max) * 100;
-    const vapPct = (vap / max) * 100;
-    return (
-      <View style={styles.phaseVisualization}>
-        <Text style={styles.visualizationTitle}>Phase Change Enthalpy</Text>
-        <View style={styles.phaseEnergyContainer}>
-          <View style={styles.phaseEnergyRow}>
-            <Text style={styles.phaseEnergyLabel}>ΔH_fus</Text>
-            <View style={[styles.phaseEnergyBar, { width: `${fusPct}%`, backgroundColor: '#45B7D1' }]}> 
-              <Text style={styles.phaseEnergyValueInside}>6 kJ/mol</Text>
-            </View>
-          </View>
-          <View style={styles.phaseEnergyRow}>
-            <Text style={styles.phaseEnergyLabel}>ΔH_vap</Text>
-            <View style={[styles.phaseEnergyBar, { width: `${vapPct}%`, backgroundColor: '#FF6B6B' }]}> 
-              <Text style={styles.phaseEnergyValueInside}>41 kJ/mol</Text>
-            </View>
-          </View>
-        </View>
-        <Text style={styles.phaseInfoText}>Energy inputs for melting and vaporization</Text>
-      </View>
-    );
-  };
+  
 
 
   return (
@@ -733,7 +705,6 @@ export default function ThermoCalculatorScreen() {
               <EntropyInterpretationCard deltaS={results.deltaS} />
               <GibbsInterpretationCard deltaG={results.deltaG} K={results.K} equilibriumTemp={results.equilibriumTemp} />
               <PotentialEnergyDiagram deltaG={results.deltaG} />
-              <PhaseEnthalpyDiagram />
               <HeatingCurveVisualization tempK={parseFloat(temperature) || 298} />
 
 
