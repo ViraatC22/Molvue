@@ -264,55 +264,7 @@ const HomeScreen = ({ navigation }: any) => {
         ]}
       >
         <View style={[styles.hero, { width: contentWidth, alignSelf: 'center' }]}>
-          <View style={styles.heroParticles}>
-            <Animated.View 
-              style={[
-                styles.particle,
-                {
-                  transform: [{
-                    scale: heroAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 1]
-                    })
-                  }]
-                }
-              ]}
-            >
-              <Text style={styles.particleText}>⚛️</Text>
-            </Animated.View>
-            <Animated.View 
-              style={[
-                styles.particle,
-                styles.particle2,
-                {
-                  transform: [{
-                    scale: heroAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 1]
-                    })
-                  }]
-                }
-              ]}
-            >
-              <Text style={styles.particleText}>🧬</Text>
-            </Animated.View>
-            <Animated.View 
-              style={[
-                styles.particle,
-                styles.particle3,
-                {
-                  transform: [{
-                    scale: heroAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 1]
-                    })
-                  }]
-                }
-              ]}
-            >
-              <Text style={styles.particleText}>🔬</Text>
-            </Animated.View>
-          </View>
+        
           <Text style={styles.brand}>Molvue</Text>
           <Text style={styles.heroTitle}>Explore Chemistry Visually</Text>
           <Text style={styles.heroSubtitle}>From molecules to reactions - master chemistry concepts with interactive tools</Text>
