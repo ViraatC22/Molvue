@@ -327,7 +327,7 @@ const IMFTypes = {
   'Ion-dipole': { color: '#96CEB4', strength: 'Very Strong (50-200 kJ/mol)' }
 };
 
-export default function IMFExplorerScreen() {
+export default function IMFExplorerScreen({ navigation, route }: any) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMolecule, setSelectedMolecule] = useState<Molecule | null>(null);
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -349,6 +349,14 @@ export default function IMFExplorerScreen() {
       ]).start();
     }
   }, [selectedMolecule]);
+
+  useEffect(() => {
+    const p = route?.params?.prefill || route?.params;
+    if (p?.moleculeName) {
+      const mol = commonMolecules.find(m => m.name.toLowerCase() === String(p.moleculeName).toLowerCase());
+      if (mol) setSelectedMolecule(mol);
+    }
+  }, [route?.params]);
 
   const filteredMolecules = commonMolecules.filter(mol =>
     mol.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -406,6 +414,13 @@ export default function IMFExplorerScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      {route?.params?.fromPractice && (
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.backText}>Back to Question</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.header}>
         <Text style={styles.title}>IMF Explorer</Text>
         <Text style={styles.subtitle}>Intermolecular Forces Analysis</Text>
@@ -566,6 +581,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f7',
+  },
+  backRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  backBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#10b981',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    color: '#10b981',
+    fontWeight: '700',
+    fontSize: 12,
   },
   header: {
     padding: 20,

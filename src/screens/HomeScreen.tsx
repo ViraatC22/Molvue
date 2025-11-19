@@ -171,8 +171,7 @@ const HomeScreen = ({ navigation }: any) => {
               <Text style={[styles.moduleIcon, { color: module.color }]}>{module.icon}</Text>
             </View>
             <View style={styles.moduleHeaderText}>
-              <Text style={styles.moduleTitle}>{module.title}</Text>
-              <Text style={[styles.conceptBadge, { color: module.color }]}>{module.concept}</Text>
+              <Text style={styles.moduleTitle}>{module.concept}</Text>
             </View>
           </View>
           <Text style={styles.moduleDescription} numberOfLines={2}>{module.description}</Text>
@@ -277,6 +276,9 @@ const HomeScreen = ({ navigation }: any) => {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.heroButton, { backgroundColor: '#f59e0b' }]} onPress={() => navigation.navigate('ThermoCalculator')}>
             <Text style={styles.heroButtonText}>Thermodynamics</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.heroButton, { backgroundColor: '#10b981' }]} onPress={() => navigation.navigate('PracticePage')}>
+            <Text style={styles.heroButtonText}>Practice</Text>
           </TouchableOpacity>
           </View>
         </View>

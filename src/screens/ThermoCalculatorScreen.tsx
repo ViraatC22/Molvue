@@ -49,7 +49,7 @@ const thermodynamicDatabase: ThermoData[] = [
   { compound: 'Ca²⁺(aq)', deltaHf: -542.83, S: -53.1, state: 'aqueous' },
 ];
 
-export default function ThermoCalculatorScreen() {
+export default function ThermoCalculatorScreen({ navigation, route }: any) {
   const [reaction, setReaction] = useState('');
   const [temperature, setTemperature] = useState('298');
   const [results, setResults] = useState<{
@@ -99,6 +99,17 @@ export default function ThermoCalculatorScreen() {
     if (/nacl|kcl|caco₃|cao|naoh|agcl/.test(userBase)) preferred = 'solid';
     return candidates.find(c => c.state === preferred) || candidates[0];
   };
+
+  useEffect(() => {
+    const p = route?.params?.prefill || route?.params;
+    if (p) {
+      if (p.reaction != null) setReaction(String(p.reaction));
+      if (p.temperature != null) setTemperature(String(p.temperature));
+    }
+    if (route?.params?.autoRun) {
+      calculateThermodynamics();
+    }
+  }, [route?.params]);
 
   const parseReaction = (reactionText: string, tempK: number): {
     reactants: ParsedCompound[];
@@ -617,6 +628,13 @@ export default function ThermoCalculatorScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      {route?.params?.fromPractice && (
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.backText}>Back to Question</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.header}>
         <Text style={styles.title}>Thermo Calculator</Text>
         <Text style={styles.subtitle}>Calculate ΔH, ΔS, ΔG & Spontaneity</Text>
@@ -726,6 +744,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f7',
+  },
+  backRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  backBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#f59e0b',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    color: '#f59e0b',
+    fontWeight: '700',
+    fontSize: 12,
   },
   header: {
     padding: 20,

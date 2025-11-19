@@ -75,7 +75,7 @@ const getMolarMass = (formula: string) => {
   return mm > 0 ? mm : 100;
 };
 
-export default function StoichLabScreen() {
+export default function StoichLabScreen({ navigation, route }: any) {
   const [reactionInput, setReactionInput] = useState('');
   const [reaction, setReaction] = useState<Reaction | null>(null);
   const [reactantsInput, setReactantsInput] = useState<{ compound: string; mass: string }[]>([
@@ -281,6 +281,18 @@ export default function StoichLabScreen() {
     ]).start();
   };
 
+  useEffect(() => {
+    const p = route?.params?.prefill || route?.params;
+    if (p) {
+      if (p.reactionInput != null) setReactionInput(String(p.reactionInput));
+      if (p.reactantsInput && Array.isArray(p.reactantsInput)) setReactantsInput(p.reactantsInput.map((r: any) => ({ compound: String(r.compound ?? ''), mass: String(r.mass ?? '') })));
+      if (p.targetCompound != null) setTargetCompound(String(p.targetCompound));
+    }
+    if (route?.params?.autoRun) {
+      calculateStoichiometry();
+    }
+  }, [route?.params]);
+
   const ResultCard = ({ title, value, unit, color, description }: any) => {
     const [pulseAnim] = useState(new Animated.Value(1));
 
@@ -366,6 +378,13 @@ export default function StoichLabScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      {route?.params?.fromPractice && (
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.backText}>Back to Question</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.header}>
         <Text style={styles.title}>Stoich Lab</Text>
         <Text style={styles.subtitle}>Stoichiometry Calculator</Text>
@@ -527,6 +546,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f7',
+  },
+  backRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  backBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#ef4444',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    color: '#ef4444',
+    fontWeight: '700',
+    fontSize: 12,
   },
   header: {
     padding: 20,

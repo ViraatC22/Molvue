@@ -70,7 +70,7 @@ const titrantOptions: Species[] = [
   { name: 'NH₃', formula: 'NH₃', role: 'base', strength: 'weak', Kb: 1.8e-5, n: 1 },
 ];
 
-export default function TitrationSimulatorScreen() {
+export default function TitrationSimulatorScreen({ navigation, route }: any) {
   const [selectedPair, setSelectedPair] = useState<AcidBasePair>(acidBasePairs[0]);
   const [selectedIndicator, setSelectedIndicator] = useState(indicators[0]);
   const [selectedAnalyte, setSelectedAnalyte] = useState<Species>({ name: 'HCl', formula: 'HCl', role: 'acid', strength: 'strong', Ka: 1000, n: 1 });
@@ -135,6 +135,20 @@ export default function TitrationSimulatorScreen() {
     setFlaskColor('#cccccc');
     setIndicatorTriggered(false);
   }, [selectedAnalyte, selectedTitrant]);
+
+  useEffect(() => {
+    const p = route?.params?.prefill || route?.params;
+    if (p) {
+      if (p.analyteVolumeInput != null) setAnalyteVolumeInput(String(p.analyteVolumeInput));
+      if (p.titrantConcInput != null) setTitrantConcInput(String(p.titrantConcInput));
+      if (p.totalAddVolumeInput != null) setTotalAddVolumeInput(String(p.totalAddVolumeInput));
+      if (p.analyte) setSelectedAnalyte({ ...selectedAnalyte, name: p.analyte, formula: p.analyte });
+      if (p.titrant) setSelectedTitrant({ ...selectedTitrant, name: p.titrant, formula: p.titrant });
+    }
+    if (route?.params?.autoRun) {
+      startTitration();
+    }
+  }, [route?.params]);
 
   const calculateTitrationCurve = (pair: AcidBasePair, initialVolume: number, maxVolume: number, titrantConc: number, nA: number, nB: number): TitrationData[] => {
     const data: TitrationData[] = [];
@@ -368,6 +382,13 @@ export default function TitrationSimulatorScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      {route?.params?.fromPractice && (
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.backText}>Back to Question</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.header}>
         <Text style={styles.title}>Titration Simulator</Text>
         <Text style={styles.subtitle}>Interactive Acid-Base Titrations</Text>
@@ -690,6 +711,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f7',
+  },
+  backRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  backBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#8b5cf6',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    color: '#8b5cf6',
+    fontWeight: '700',
+    fontSize: 12,
   },
   header: {
     padding: 20,

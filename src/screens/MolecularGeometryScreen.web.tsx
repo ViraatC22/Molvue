@@ -30,13 +30,26 @@ const COMMON_MOLECULES: Record<string, MoleculeInfo> = {
   'XeF4': { centralAtom: 'Xe', neighborAtoms: ['F', 'F', 'F', 'F'], bondingPairs: 4, lonePairs: 2 },
 };
 
-const MolecularGeometryScreen = () => {
+const MolecularGeometryScreen = ({ navigation, route }: any) => {
   const [molecule, setMolecule] = useState('');
   const [bondingPairs, setBondingPairs] = useState('');
   const [lonePairs, setLonePairs] = useState('');
   const [geometryInfo, setGeometryInfo] = useState<GeometryInfo | null>(null);
   const [centralAtom, setCentralAtom] = useState('');
   const [neighborAtomsText, setNeighborAtomsText] = useState('');
+  useEffect(() => {
+    const p = route?.params?.prefill || route?.params;
+    if (p) {
+      if (p.bondingPairs != null) setBondingPairs(String(p.bondingPairs));
+      if (p.lonePairs != null) setLonePairs(String(p.lonePairs));
+      if (p.centralAtom != null) setCentralAtom(String(p.centralAtom));
+      if (p.neighborAtomsText != null) setNeighborAtomsText(String(p.neighborAtomsText));
+      if (p.molecule != null) setMolecule(String(p.molecule));
+    }
+    if (route?.params?.autoRun) {
+      determineGeometry();
+    }
+  }, [route?.params]);
 
   // Parse molecule input and set all relevant fields
   const parseMolecule = (moleculeInput: string) => {
@@ -280,6 +293,13 @@ const MolecularGeometryScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      {route?.params?.fromPractice && (
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.backText}>Back to Question</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>3D Molecular Geometry Explorer</Text>
         <Text style={styles.description}>
@@ -518,6 +538,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f7',
+  },
+  backRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  backBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#FBBC05',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    color: '#FBBC05',
+    fontWeight: '700',
+    fontSize: 12,
   },
   section: {
     backgroundColor: '#fff',

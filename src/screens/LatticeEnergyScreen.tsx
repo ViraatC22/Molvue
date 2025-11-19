@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
-const LatticeEnergyScreen = () => {
+const LatticeEnergyScreen = ({ navigation, route }: any) => {
   const [cation, setCation] = useState('');
   const [anion, setAnion] = useState('');
   const [cationCharge, setCationCharge] = useState('');
@@ -228,8 +228,32 @@ const LatticeEnergyScreen = () => {
     setCompoundFormula(formula);
   };
 
+  useEffect(() => {
+    const p = route?.params?.prefill || route?.params;
+    if (p) {
+      if (p.cation != null) setCation(String(p.cation));
+      if (p.anion != null) setAnion(String(p.anion));
+      if (p.cationCharge != null) { setCationCharge(String(p.cationCharge)); setCationChargeEdited(true); }
+      if (p.anionCharge != null) { setAnionCharge(String(p.anionCharge)); setAnionChargeEdited(true); }
+      if (p.cationRadius != null) setCationRadius(String(p.cationRadius));
+      if (p.anionRadius != null) setAnionRadius(String(p.anionRadius));
+    }
+    if (route?.params?.autoRun) {
+      calculateLatticeEnergy();
+    }
+  }, [route?.params]);
+
+  
+
   return (
     <ScrollView style={styles.container}>
+      {route?.params?.fromPractice && (
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.backText}>Back to Question</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Lattice Energy Estimator</Text>
         <Text style={styles.description}>
@@ -503,12 +527,35 @@ const LatticeEnergyScreen = () => {
       {/* Common Ionic Radii reference removed; radii auto-calculated from element + charge */}
     </ScrollView>
   );
-};
+  };
+
+  
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f7',
+  },
+  backRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  backBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#34A853',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    color: '#34A853',
+    fontWeight: '700',
+    fontSize: 12,
   },
   autoChargeNote: {
     fontSize: 12,

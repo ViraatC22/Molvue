@@ -13,6 +13,7 @@ import IMFExplorerScreen from './src/screens/IMFExplorerScreen';
 import ThermoCalculatorScreen from './src/screens/ThermoCalculatorScreen';
 import TitrationSimulatorScreen from './src/screens/TitrationSimulatorScreen';
 import StoichLabScreen from './src/screens/StoichLabScreen';
+import PracticePageScreen from './src/screens/PracticePageScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,11 @@ export default function App() {
           name="Home" 
           component={HomeScreen} 
           options={{ title: 'Molvue - Chemistry Visualizer' }}
+        />
+        <Stack.Screen 
+          name="PracticePage" 
+          component={PracticePageScreen} 
+          options={{ title: 'Practice' }}
         />
         <Stack.Screen 
           name="MolecularGeometry" 
