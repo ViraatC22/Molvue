@@ -25,6 +25,12 @@ interface Species {
   n: number;
 }
 
+interface Indicator {
+  name: string;
+  pHRange: [number, number];
+  color: string;
+}
+
 const acidBasePairs: AcidBasePair[] = [
   {
     name: 'Strong Acid - Strong Base',
@@ -52,7 +58,7 @@ const acidBasePairs: AcidBasePair[] = [
   }
 ];
 
-const indicators = [
+const indicators: Indicator[] = [
   { name: 'Phenolphthalein', pHRange: [8.2, 10.0], color: '#FF1493' },
   { name: 'Methyl Orange', pHRange: [3.1, 4.4], color: '#FF4500' },
   { name: 'Bromothymol Blue', pHRange: [6.0, 7.6], color: '#4169E1' },
@@ -72,7 +78,7 @@ const titrantOptions: Species[] = [
 
 export default function TitrationSimulatorScreen({ navigation, route }: any) {
   const [selectedPair, setSelectedPair] = useState<AcidBasePair>(acidBasePairs[0]);
-  const [selectedIndicator, setSelectedIndicator] = useState(indicators[0]);
+  const [selectedIndicator, setSelectedIndicator] = useState<Indicator>(indicators[0]);
   const [selectedAnalyte, setSelectedAnalyte] = useState<Species>({ name: 'HCl', formula: 'HCl', role: 'acid', strength: 'strong', Ka: 1000, n: 1 });
   const [selectedTitrant, setSelectedTitrant] = useState<Species>({ name: 'NaOH', formula: 'NaOH', role: 'base', strength: 'strong', Kb: 1000, n: 1 });
   const [titrationData, setTitrationData] = useState<TitrationData[]>([]);
@@ -87,7 +93,7 @@ export default function TitrationSimulatorScreen({ navigation, route }: any) {
   const [titrantConcInput, setTitrantConcInput] = useState('0.100');
   const [totalAddVolumeInput, setTotalAddVolumeInput] = useState('50.0');
   const [endpointVolume, setEndpointVolume] = useState<number | null>(null);
-  const [recommendedIndicator, setRecommendedIndicator] = useState(indicators[2]);
+  const [recommendedIndicator, setRecommendedIndicator] = useState<Indicator>(indicators[2]);
   const num = (s: string, fb: number) => {
     const v = parseFloat((s || '').replace(/[^0-9.+\-eE]/g, ''));
     return isFinite(v) && v > 0 ? v : fb;
@@ -271,17 +277,19 @@ export default function TitrationSimulatorScreen({ navigation, route }: any) {
     const data = calculateTitrationCurve(selectedPair, initialVolume, maxVolume, titrantConc, selectedAnalyte.n, selectedTitrant.n);
     setTitrationData(data);
     const eqPoint = findEquivalencePoint(data);
+    const endPoint = findEndpointVolume(data, selectedIndicator.pHRange);
+    const stopAt = endPoint != null ? endPoint : (eqPoint != null ? eqPoint : maxVolume);
     setEquivalencePoint(eqPoint);
-    setEndpointVolume(eqPoint);
+    setEndpointVolume(stopAt != null ? stopAt : eqPoint);
 
     let index = 0;
     const maxStop = maxVolume;
     titrationInterval.current = setInterval(() => {
       if (index < data.length) {
         const next = data[index];
-        setCurrentVolume(next.volume);
-        if (equivalencePoint != null && next.volume >= equivalencePoint) {
-          setEndpointVolume(equivalencePoint);
+        if (next.volume >= stopAt) {
+          setCurrentVolume(stopAt);
+          setEndpointVolume(stopAt);
           setFlaskColor(selectedIndicator.color);
           setIndicatorTriggered(true);
           setIsTitrating(false);
@@ -297,6 +305,7 @@ export default function TitrationSimulatorScreen({ navigation, route }: any) {
           }
           return;
         }
+        setCurrentVolume(next.volume);
         index += 1;
       } else {
         setIsTitrating(false);
@@ -342,7 +351,7 @@ export default function TitrationSimulatorScreen({ navigation, route }: any) {
 
   useEffect(() => {
     if (titrationData.length > 0) {
-      const endPt = findEndpointVolume(titrationData, [selectedIndicator.pHRange[0], selectedIndicator.pHRange[1]]);
+    const endPt = findEndpointVolume(titrationData, selectedIndicator.pHRange);
       if (endPt != null) {
         setEndpointVolume(endPt);
       } else if (equivalencePoint != null) {
@@ -375,8 +384,6 @@ export default function TitrationSimulatorScreen({ navigation, route }: any) {
     setTitrationData(data);
     const eqPoint = findEquivalencePoint(data);
     setEquivalencePoint(eqPoint);
-    setEndpointVolume(eqPoint);
-    setCurrentVolume(0);
     fadeAnim.setValue(1);
   }, [analyteVolumeInput, titrantConcInput, totalAddVolumeInput, selectedPair, selectedAnalyte.n, selectedTitrant.n, selectedIndicator, isTitrating]);
 

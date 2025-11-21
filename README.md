@@ -45,6 +45,19 @@ Visual chemistry toolkit built with Expo React Native (+ web) and a small Node s
    - Balances reactions; finds limiting reagent; computes theoretical yield and leftovers; shows a calculation log.
    - Core: balancing `src/screens/StoichLabScreen.tsx:111`, stoichiometry `src/screens/StoichLabScreen.tsx:200`.
 
+7. **Practice Page**
+   - A guided quiz that spans all modules. Each tab contains 5 short questions with instant feedback.
+   - Hints either display quick tips or deep‑link into the relevant module with prefilled inputs and optional autorun.
+   - Core: module/question spec `src/screens/PracticePageScreen.tsx:26–255`; state for answers/checked/hints `src/screens/PracticePageScreen.tsx:259–282`; deep‑link navigation `src/screens/PracticePageScreen.tsx:304–315`.
+
+### How Practice Works
+- Tabs: Switch between topics (IMF, Thermo, Lattice, Titration, Stoich, Geometry) via the header tabs (`src/screens/PracticePageScreen.tsx:321–327`).
+- Select: Tap an option to record your answer (`selectOption`) and reset feedback (`src/screens/PracticePageScreen.tsx:286–295`).
+- Check: Press “Check Answer” to see Correct/Try again (`checkAnswer`) with colored feedback (`src/screens/PracticePageScreen.tsx:297–302`, `src/screens/PracticePageScreen.tsx:358–362`).
+- Hints: 
+  - Inline text hints populate the hint box (`src/screens/PracticePageScreen.tsx:305–311`, `src/screens/PracticePageScreen.tsx:353–357`).
+  - Module hints open a simulation screen with `prefill` parameters and `autoRun` to demonstrate the concept (`src/screens/PracticePageScreen.tsx:312–315`).
+
 ## Project Structure
 
 - Root Expo app

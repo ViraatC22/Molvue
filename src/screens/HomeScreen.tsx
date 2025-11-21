@@ -221,12 +221,11 @@ const HomeScreen = ({ navigation }: any) => {
     
   ];
 
-  const renderModuleCard = (module: any, index: number, forcedWidth?: number) => {
+  const ModuleCard = ({ module, index, forcedWidth }: { module: any; index: number; forcedWidth?: number }) => {
     const columns = width > 620 ? 2 : 1;
     const cardWidth = forcedWidth ?? (columns === 1 ? width - 40 : contentWidth / columns);
     const isPressed = pressed === module.id || hovered === module.id;
     const cardAnim = useRef(new Animated.Value(0)).current;
-    
     useEffect(() => {
       Animated.timing(cardAnim, {
         toValue: 1,
@@ -235,14 +234,12 @@ const HomeScreen = ({ navigation }: any) => {
         useNativeDriver: true,
       }).start();
     }, []);
-    
     const hoverProps: any = Platform.OS === 'web' ? {
       onMouseEnter: () => setHovered(module.id),
       onMouseLeave: () => setHovered(null),
     } : {};
     return (
       <TouchableOpacity
-        key={module.id}
         activeOpacity={0.92}
         onPressIn={() => setPressed(module.id)}
         onPressOut={() => setPressed(null)}
@@ -667,14 +664,33 @@ const HomeScreen = ({ navigation }: any) => {
           </View>
           <View style={[styles.modulesContainer, { width: width, alignSelf: 'center' }]}>
             {(() => {
-              const isThree = width > 620 && !query;
+              const q = query.trim().toLowerCase();
+              const isThree = width > 620 && !q;
               if (!isThree) {
-                const list = query ? modules.filter(m => (
-                  m.title.toLowerCase().includes(query.toLowerCase()) ||
-                  m.description.toLowerCase().includes(query.toLowerCase()) ||
-                  m.concept.toLowerCase().includes(query.toLowerCase())
-                )) : modules;
-                return list.map((module, index) => renderModuleCard(module, index));
+                const list = q ? modules.filter(m => {
+                  const title = (m.title ?? '').toLowerCase();
+                  const description = (m.description ?? '').toLowerCase();
+                  const concept = (m.concept ?? '').toLowerCase();
+                  const info = (m.info ?? '').toLowerCase();
+                  const id = (m.id ?? '').toLowerCase();
+                  return (
+                    title.includes(q) ||
+                    description.includes(q) ||
+                    concept.includes(q) ||
+                    info.includes(q) ||
+                    id.includes(q)
+                  );
+                }) : modules;
+                if (list.length === 0) {
+                  return (
+                    <View style={styles.noResults}>
+                      <Text style={styles.noResultsText}>No modules found</Text>
+                    </View>
+                  );
+                }
+                return list.map((module, index) => (
+                  <ModuleCard key={module.id} module={module} index={index} />
+                ));
               }
               const colWidth = width / 2 - 24;
               const findById = (id: string) => modules.find(m => m.id === id)!;
@@ -691,22 +707,27 @@ const HomeScreen = ({ navigation }: any) => {
               return (
                 <>
                   <View style={{ width: colWidth }}>
-                    {left.map((m, i) => renderModuleCard(m, i, colWidth))}
+                    {left.map((m, i) => (
+                      <ModuleCard key={m.id} module={m} index={i} forcedWidth={colWidth} />
+                    ))}
                   </View>
                   <View style={{ width: colWidth }}>
-                    {right.map((m, i) => renderModuleCard(m, i, colWidth))}
+                    {right.map((m, i) => (
+                      <ModuleCard key={m.id} module={m} index={i} forcedWidth={colWidth} />
+                    ))}
                   </View>
                 </>
               );
             })()}
           </View>
         </Animated.View>
-        <View style={styles.footer}>
-          <Text style={styles.footerTitle}>AP Chemistry Fall PBL 2025</Text>
-          <Text style={styles.footerText}>Viraat • Aarnav • Donna • Neeraja</Text>
-          <Text style={styles.footerSubtext}>Fall 2025 • PBL Initiative</Text>
-        </View>
+        
       </ScrollView>
+      <View style={styles.footer}>
+        <Text style={styles.footerTitle}>AP Chemistry Fall PBL 2025</Text>
+        <Text style={styles.footerText}>Viraat • Aarnav • Donna • Neeraja</Text>
+        <Text style={styles.footerSubtext}>Fall 2025 • PBL Initiative</Text>
+      </View>
     </View>
   );
 };
@@ -1020,6 +1041,22 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 0,
     pointerEvents: 'none',
+  },
+  noResults: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  noResultsText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#6b7280',
   },
   moduleCard: {
     backgroundColor: '#ffffff',
